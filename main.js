@@ -1,3 +1,21 @@
+var timer;
+var paused = false;
+
+function Timer(callback, delay) {
+    var timerId;
+
+    this.pause = function() {
+        window.clearInterval(timerId);
+    };
+
+    this.resume = function() {
+        window.clearTimeout(timerId);
+        timerId = window.setInterval(callback, delay);
+    };
+
+    this.resume();
+}
+
 function startTimer(elem) {
     var roundLength = 180;
     var restPeriod = 60;
@@ -10,7 +28,8 @@ function startTimer(elem) {
 
     var clock = document.getElementById(elem);
 
-    setInterval(function () {
+    timer = new Timer(function () {
+        console.log(secondsLeft);
         var minutes = Math.floor(secondsLeft / 60);
         var seconds = secondsLeft % 60;
         if (seconds < 10) seconds = "0" + seconds;
@@ -31,5 +50,12 @@ function startTimer(elem) {
 }
 
 function pause () {
-    console.log('todo');
+    if (paused) {
+        document.getElementById("pause").innerHTML = "Pause";
+        timer.resume()
+    } else {
+        document.getElementById("pause").innerHTML = "Resume";
+        timer.pause();
+    }
+    paused = !paused;
 }
